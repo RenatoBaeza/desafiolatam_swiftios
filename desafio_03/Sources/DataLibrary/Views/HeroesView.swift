@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HeroesView: View {
     @StateObject private var viewModel = HeroesViewModel()
-    @Environment(\.dismiss) private var dismiss
+    @State private var showingAddSheet = false
     
     var body: some View {
         List(viewModel.heroes) { hero in
@@ -14,6 +14,19 @@ struct HeroesView: View {
         }
         .navigationTitle("Heroes")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button(action: { showingAddSheet = true }) {
+                Image(systemName: "plus")
+            }
+        }
+        .sheet(isPresented: $showingAddSheet) {
+            AddElementSheet(
+                isPresented: $showingAddSheet,
+                onSave: { name, description in
+                    // Handle save
+                }
+            )
+        }
         .sheet(item: $viewModel.selectedHero) { hero in
             HeroDetailView(hero: hero)
         }
@@ -31,20 +44,13 @@ struct HeroRow: View {
             AsyncImage(url: URL(string: hero.imagen)) { image in
                 image
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
+                    .aspectRatio(contentMode: .fit)
             } placeholder: {
                 ProgressView()
             }
             .frame(width: 50, height: 50)
-            .clipShape(Circle())
             
-            VStack(alignment: .leading) {
-                Text(hero.nombre)
-                    .font(.headline)
-                Text(hero.primeraAparicion)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-            }
+            Text(hero.nombre)
         }
     }
 }
