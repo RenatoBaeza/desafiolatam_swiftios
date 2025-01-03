@@ -12,11 +12,16 @@ let package = Package(
     targets: [
         .target(
             name: "DataLibrary",
-            dependencies: ["Alamofire"]
+            dependencies: ["Alamofire"],
+            path: "Sources/DataLibrary",
+            resources: [
+                .process("Resources/Assets.xcassets")
+            ]
         ),
         .testTarget(
             name: "DataLibraryTests",
-            dependencies: ["DataLibrary"]
+            dependencies: ["DataLibrary"],
+            path: "Tests/DataLibraryTests"
         )
     ]
 ) 
