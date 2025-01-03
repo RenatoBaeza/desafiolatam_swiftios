@@ -4,37 +4,40 @@ import SwiftData
 struct UserElementsView: View {
     @StateObject private var viewModel = UserElementsViewModel()
     @State private var showingAddSheet = false
-    @State private var selectedElement: UserElement? = nil
+    @State private var elementToEdit: UserElement? = nil
     
     var body: some View {
         NavigationStack {
-            List(viewModel.userElements) { element in
-                Button(action: { selectedElement = element }) {
-                    HStack {
-                        if let imageData = element.imageData,
-                           let uiImage = UIImage(data: imageData) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 50, height: 50)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                        } else {
-                            Image(systemName: "photo")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 50, height: 50)
-                                .foregroundColor(.gray)
-                        }
-                        
-                        VStack(alignment: .leading) {
-                            Text(element.title)
-                                .font(.headline)
-                            Text(element.dateCreated, style: .date)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+            List {
+                ForEach(viewModel.userElements) { element in
+                    Button(action: { elementToEdit = element }) {
+                        HStack {
+                            if let imageData = element.imageData,
+                               let uiImage = UIImage(data: imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 50, height: 50)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            } else {
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 50, height: 50)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                Text(element.title)
+                                    .font(.headline)
+                                Text(element.dateCreated, style: .date)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
                         }
                     }
                 }
+                .onDelete(perform: viewModel.deleteUserElements)
             }
             .navigationTitle("User Elements")
             .toolbar {
@@ -48,8 +51,16 @@ struct UserElementsView: View {
                     onSave: viewModel.addUserElement
                 )
             }
-            .sheet(item: $selectedElement) { element in
-                UserElementDetailView(element: element)
+            .sheet(item: $elementToEdit) { element in
+                AddElementSheet(
+                    isPresented: .constant(true),
+                    onSave: { title, description, imageData in
+                        viewModel.updateUserElement(element, title: title, description: description, imageData: imageData)
+                        elementToEdit = nil
+                    },
+                    initialTitle: element.title,
+                    initialImage: element.imageData.flatMap(UIImage.init)
+                )
             }
         }
         .onAppear {

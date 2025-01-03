@@ -8,7 +8,6 @@ class UserElementsViewModel: ObservableObject {
     
     func fetchUserElements() {
         // Implement your fetch logic here
-        // For now, we'll just have an empty implementation
     }
     
     func addUserElement(name: String, description: String, imageData: Data? = nil) {
@@ -22,5 +21,12 @@ class UserElementsViewModel: ObservableObject {
     
     func deleteUserElements(at indexSet: IndexSet) {
         userElements.remove(atOffsets: indexSet)
+    }
+    
+    func updateUserElement(_ element: UserElement, title: String, description: String, imageData: Data?) {
+        if let index = userElements.firstIndex(where: { $0.id == element.id }) {
+            userElements[index].title = title
+            userElements[index].imageData = imageData
+        }
     }
 } 

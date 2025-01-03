@@ -3,11 +3,23 @@ import SwiftUI
 struct AddElementSheet: View {
     @Binding var isPresented: Bool
     let onSave: (String, String, Data?) -> Void
+    var initialTitle: String = ""
+    var initialImage: UIImage? = nil
     
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var showingImagePicker = false
     @State private var selectedImage: UIImage?
+    
+    init(isPresented: Binding<Bool>, 
+         onSave: @escaping (String, String, Data?) -> Void,
+         initialTitle: String = "",
+         initialImage: UIImage? = nil) {
+        self._isPresented = isPresented
+        self.onSave = onSave
+        self._title = State(initialValue: initialTitle)
+        self._selectedImage = State(initialValue: initialImage)
+    }
     
     var body: some View {
         NavigationStack {
@@ -33,7 +45,7 @@ struct AddElementSheet: View {
                     }
                 }
             }
-            .navigationTitle("New Element")
+            .navigationTitle(initialTitle.isEmpty ? "New Element" : "Edit Element")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -51,7 +63,6 @@ struct AddElementSheet: View {
                         )
                         isPresented = false
                     }
-                    .disabled(title.isEmpty)
                 }
             }
             .sheet(isPresented: $showingImagePicker) {
