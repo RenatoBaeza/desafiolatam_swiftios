@@ -11,10 +11,11 @@ class UserElementsViewModel: ObservableObject {
         // For now, we'll just have an empty implementation
     }
     
-    func addUserElement(name: String, description: String) {
+    func addUserElement(name: String, description: String, imageData: Data? = nil) {
         let newElement = UserElement(
             title: name,
-            description: description
+            description: description,
+            imageData: imageData
         )
         userElements.append(newElement)
     }

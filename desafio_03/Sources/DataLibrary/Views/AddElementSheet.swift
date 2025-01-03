@@ -2,51 +2,65 @@ import SwiftUI
 
 struct AddElementSheet: View {
     @Binding var isPresented: Bool
-    let onSave: (String, String) -> Void
+    let onSave: (String, String, Data?) -> Void
     
-    @State private var name = ""
-    @State private var description = ""
-    @State private var selectedImage: UIImage?
+    @State private var title: String = ""
+    @State private var description: String = ""
     @State private var showingImagePicker = false
+    @State private var selectedImage: UIImage?
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
-                TextField("Name", text: $name)
-                TextField("Description", text: $description)
+                Section {
+                    TextField("Title", text: $title)
+                    TextField("Description", text: $description)
+                }
                 
-                Button(action: {
-                    showingImagePicker = true
-                }) {
-                    HStack {
-                        Text("Select Image")
-                        Spacer()
-                        if let image = selectedImage {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 40)
-                        }
+                Section {
+                    if let selectedImage {
+                        Image(uiImage: selectedImage)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 200)
+                    }
+                    
+                    Button(action: { showingImagePicker = true }) {
+                        Label(
+                            selectedImage == nil ? "Add Image" : "Change Image",
+                            systemImage: "photo"
+                        )
                     }
                 }
             }
-            .navigationTitle("Add New Hero")
-            .navigationBarItems(
-                leading: Button("Cancel") {
-                    isPresented = false
-                },
-                trailing: Button("Save") {
-                    onSave(name, description)
-                    isPresented = false
+            .navigationTitle("New Element")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
                 }
-            )
+                
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        onSave(
+                            title,
+                            description,
+                            selectedImage?.jpegData(compressionQuality: 0.8)
+                        )
+                        isPresented = false
+                    }
+                    .disabled(title.isEmpty)
+                }
+            }
             .sheet(isPresented: $showingImagePicker) {
-                ImagePicker(selectedImage: $selectedImage)
+                ImagePicker(image: $selectedImage)
             }
         }
     }
 }
 
 #Preview {
-    AddElementSheet(isPresented: .constant(true)) { _, _ in }
+    AddElementSheet(isPresented: .constant(true)) { _, _, _ in }
 } 
