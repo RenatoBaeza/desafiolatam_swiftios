@@ -14,11 +14,6 @@ struct HeroesView: View {
         }
         .navigationTitle("Heroes")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            Button(action: { showingAddSheet = true }) {
-                Image(systemName: "plus")
-            }
-        }
         .sheet(isPresented: $showingAddSheet) {
             AddElementSheet(
                 isPresented: $showingAddSheet,
