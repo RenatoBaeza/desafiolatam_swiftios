@@ -14,13 +14,6 @@ struct HeroesView: View {
         }
         .navigationTitle("Heroes")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("Back") {
-                    dismiss()
-                }
-            }
-        }
         .sheet(item: $viewModel.selectedHero) { hero in
             HeroDetailView(hero: hero)
         }
@@ -54,4 +47,10 @@ struct HeroRow: View {
             }
         }
     }
-} 
+}
+
+#Preview {
+    NavigationStack {
+        HeroesView()
+    }
+}

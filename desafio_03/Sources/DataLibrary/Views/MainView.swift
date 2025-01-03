@@ -5,13 +5,14 @@ struct MainView: View {
         NavigationStack {
             VStack(spacing: 20) {
                 NavigationLink(destination: HeroesView()) {
-                    Text("New View")
+                    Text("Heroes View")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("PrimaryColor"))
+                        .background(Color.blue)
                         .cornerRadius(10)
+                        .shadow(radius: 2)
                 }
                 
                 NavigationLink(destination: UserElementsView()) {
@@ -20,12 +21,17 @@ struct MainView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color("SecondaryColor"))
+                        .background(Color.purple)
                         .cornerRadius(10)
+                        .shadow(radius: 2)
                 }
             }
             .padding()
             .navigationTitle("Data Library")
         }
     }
+}
+
+#Preview {
+    MainView()
 } 

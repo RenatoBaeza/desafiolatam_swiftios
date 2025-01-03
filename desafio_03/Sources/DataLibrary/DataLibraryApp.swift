@@ -7,9 +7,10 @@ struct DataLibraryApp: App {
     
     init() {
         do {
-            container = try ModelContainer(for: UserElement.self)
+            let config = ModelConfiguration(isStoredInMemoryOnly: true)
+            container = try ModelContainer(for: UserElement.self, configurations: config)
         } catch {
-            fatalError("Failed to create ModelContainer for UserElement: \(error)")
+            fatalError("Could not initialize ModelContainer: \(error)")
         }
     }
     
@@ -19,4 +20,9 @@ struct DataLibraryApp: App {
         }
         .modelContainer(container)
     }
+}
+
+#Preview {
+    MainView()
+        .modelContainer(for: UserElement.self)
 } 

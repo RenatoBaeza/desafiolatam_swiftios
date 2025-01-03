@@ -64,4 +64,4 @@ struct HeroDetailView: View {
             }
         }
     }
-} 
+}
