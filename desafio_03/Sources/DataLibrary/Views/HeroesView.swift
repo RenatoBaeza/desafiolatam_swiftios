@@ -14,16 +14,11 @@ struct HeroesView: View {
         }
         .navigationTitle("Heroes")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            Button(action: { showingAddSheet = true }) {
-                Image(systemName: "plus")
-            }
-        }
         .sheet(isPresented: $showingAddSheet) {
             AddElementSheet(
                 isPresented: $showingAddSheet,
-                onSave: { name, description in
-                    // Handle save
+                onSave: { name, description, imageData in
+                    // Handle save with the additional imageData parameter
                 }
             )
         }
